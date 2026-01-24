@@ -1,7 +1,8 @@
 ## Project Table of Contents
 
 - [DGAS – Overview](#dgas--drowsy-guard-autopilot-system)  
-- [Repository Description](#repository-description)  
+- [Repository Description](#repository-description)
+- [Contributors](#contributors)  
 - [System Concept](#system-concept)  
 - [System Architecture](#system-architecture)  
   - [Lighting ECU](#lighting-ecu)  
@@ -30,6 +31,17 @@ DGAS is a **hardware-first project**, with full PCB design, embedded firmware, a
 ## Repository Description
 
 A complete **distributed automotive embedded system** for **driver drowsiness detection** and **controlled parking** using modular ECUs, central gateway coordination, and real PCBs.
+
+---
+
+## Contributors
+
+1. Omar Dahy
+2. Ayman Abohamed
+3. Loay Elzayat
+4. Ahmed Shawada
+5. Ahmed Reda
+6. Amr Ali
 
 ---
 
