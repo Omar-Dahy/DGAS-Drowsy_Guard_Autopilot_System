@@ -102,7 +102,7 @@ When drowsiness is detected, the system coordinates lighting, motion, and steeri
 ## Project Media
 
 ### DGAS Full System
-![DGAS System Overview](photos/system_overview.jpg)  
+![DGAS System Overview](photos/system_overview.png)  
 
 ### ECU Photos
 - Individual ECU photos in `photos/` directory  
