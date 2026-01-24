@@ -1,4 +1,4 @@
-## 📂 Project Table of Contents
+## Project Table of Contents
 
 - [DGAS – Overview](#dgas--drowsy-guard-autopilot-system)  
 - [Repository Description](#repository-description)  
@@ -174,10 +174,10 @@ This project was developed with support from:
 | Kafr El-Sheikh University | Kinnovia |
 | :---:         |     :---:      |
 | Academic supervision and laboratory resources | Embedded systems guidance and mentorship |
-| <img src="photos/sponsors/kafr_el_sheikh_university.png" width="120"/> | <img src="photos/sponsors/kinnovia.png" width="120"/>
+| <img src="photos/sponsors/kafr_el_sheikh_university.png" width="200"/> | <img src="photos/sponsors/kinnovia.png" width="200"/>
 | Siemens | ITIDA |
 | Provided AI hardware platform for driver drowsiness detection | National technology and innovation support |
-| <img src="photos/sponsors/siemens.png" width="200"/> | <img src="photos/sponsors/itida.png" width="200"/> |
+| <img src="photos/sponsors/siemens.png" width="200"/> | <img src="photos/sponsors/itida.png" width="250"/> |
 
 ---
 
