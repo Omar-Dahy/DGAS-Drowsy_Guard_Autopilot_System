@@ -1,12 +1,3 @@
-# DGAS – Drowsy Guard Autopilot System
-
-**DGAS (Drowsy Guard Autopilot System)** is a graduation project implementing a **distributed automotive embedded system** designed to detect driver drowsiness and respond by **safely parking the vehicle**.
-
-The system follows a **multi-ECU architecture**, with independent Electronic Control Units (ECUs) managing lighting, motion, and steering, and communicating through a **central Gateway ECU**.  
-DGAS is a **hardware-first project**, with full PCB design, embedded firmware, and integrated system-level operation, inspired by real-world automotive and ADAS systems.
-
-
-
 ## 📂 Project Table of Contents
 
 - [DGAS – Overview](#dgas--drowsy-guard-autopilot-system)  
@@ -23,9 +14,16 @@ DGAS is a **hardware-first project**, with full PCB design, embedded firmware, a
 - [Project Media](#project-media)  
 - [Project Structure](#project-structure)  
 - [Sponsorship](#sponsorship)  
-- [License](#license)  
+- [License](#license)
 
 ---
+
+# DGAS – Drowsy Guard Autopilot System
+
+**DGAS (Drowsy Guard Autopilot System)** is a graduation project implementing a **distributed automotive embedded system** designed to detect driver drowsiness and respond by **safely parking the vehicle**.
+
+The system follows a **multi-ECU architecture**, with independent Electronic Control Units (ECUs) managing lighting, motion, and steering, and communicating through a **central Gateway ECU**.  
+DGAS is a **hardware-first project**, with full PCB design, embedded firmware, and integrated system-level operation, inspired by real-world automotive and ADAS systems.
 
 ---
 
@@ -165,3 +163,8 @@ DGAS/
 │
 ├── README.md  <-- This file (all-inclusive)
 └── NOTES.md  <-- Personal comments and design notes
+
+```
+
+## License
+This project is licensed under the MIT License.
