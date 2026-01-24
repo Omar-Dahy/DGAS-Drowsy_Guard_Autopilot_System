@@ -13,7 +13,7 @@
 - [Hardware Implementation](#hardware-implementation)  
 - [Project Media](#project-media)  
 - [Project Structure](#project-structure)  
-- [Sponsorship](#sponsorship)  
+- [Sponsorship](#sponsorship-and-support)  
 - [License](#license)
 
 ---
@@ -165,6 +165,29 @@ DGAS/
 └── NOTES.md  <-- Personal comments and design notes
 
 ```
+---
+
+## Sponsorship and Support
+
+This project was developed with support from:
+
+### Kafr El-Sheikh University
+Academic supervision and laboratory resources.  
+<img src="photos/sponsors/kafr_el_sheikh_university.png" width="120"/>
+
+### Kinnovia
+Embedded systems guidance and mentorship.  
+<img src="photos/sponsors/kinnovia.png" width="120"/>
+
+### Siemens
+Provided AI hardware platform for driver drowsiness detection.  
+<img src="photos/sponsors/siemens.png" width="120"/>
+
+### ITIDA
+National technology and innovation support.  
+<img src="photos/sponsors/itida.png" width="120"/>
+
+---
 
 ## License
 This project is licensed under the MIT License.
