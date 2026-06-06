@@ -144,10 +144,8 @@ DGAS/
 │   └── README.md
 │
 ├── steering_ecu/
-│   ├── schematics/
 │   ├── layouts/
 │   ├── firmware/
-│   ├── photos/
 │   └── README.md
 │
 ├── gateway_ecu/
