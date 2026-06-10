@@ -375,7 +375,6 @@ gateway_ecu/
 | **DMA** | DMA1 — I2C TX channel offload |
 | **Code Generation** | STM32CubeMX |
 | **Language** | C (Embedded) |
-| **PCB Design** | Custom PCB (hardware-specific) |
 
 ---
 
