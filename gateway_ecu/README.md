@@ -359,8 +359,8 @@ gateway_ecu/
 
 | Image | Description | Path |
 |---|---|---|
-| **Vehicle Network Diagram** | Logical architecture diagram of the full DGAS ECU network | `gateway_ecu/layouts/Vehicle_Network.png` |
-| **Real Vehicle Network** | Hardware photograph of the physical I2C ECU network | `gateway_ecu/photos/Real_Vehicle_Network.png` |
+| **Vehicle Network Diagram** | Logical architecture diagram of the full DGAS ECU network | ![Vehicle_Network](./gateway_ecu/layouts/Vehicle_Network.png) |
+| **Real Vehicle Network** | Hardware photograph of the physical I2C ECU network | ![Real_Vehicle_Network](./gateway_ecu/photos/Real_Vehicle_Network.png) |
 
 ---
 
