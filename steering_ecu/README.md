@@ -38,7 +38,6 @@
 - [Technologies Used](#-technologies-used)
 - [Challenges and Solutions](#-challenges-and-solutions)
 - [Future Improvements](#-future-improvements)
-- [Contributors](#-contributors)
 - [License](#-license)
 
 ---
@@ -169,20 +168,20 @@ The Steering ECU operates as a **dedicated I2C slave** on the DGAS vehicle bus. 
 ┌──────────────────────────────────────────────────────────────────┐
 │                     DGAS System Bus (I2C)                        │
 │                                                                  │
-│  ┌──────────────┐      SDA/SCL      ┌──────────────────────┐    │
-│  │  Master /    │ ◄──────────────── │    Steering ECU      │    │
-│  │  Gateway ECU │ ─────────────────►│    I2C Slave         │    │
-│  └──────────────┘                   └──────────────────────┘    │
+│  ┌──────────────┐      SDA/SCL      ┌──────────────────────┐     │
+│  │  Master /    │ ◄──────────────── │    Steering ECU      │     │
+│  │  Gateway ECU │ ─────────────────►│    I2C Slave         │     │
+│  └──────────────┘                   └──────────────────────┘     │
 │         │                                      │                 │
-│         │                       ┌──────────────┴──────────┐     │
-│         │                       ▼                         ▼     │
+│         │                       ┌──────────────┴──────────┐      │
+│         │                       ▼                         ▼      │
 │         │                 ┌───────────┐           ┌────────────┐ │
 │         │                 │  DC Motor │           │    ADC     │ │
 │         │                 │  H-Bridge │           │ Feedback   │ │
-│         │                 └─────┬─────┘           └─────┬──────┘│
-│         │                       │                       │       │
-│         │                       ▼                       ▼       │
-│         │               Steering Shaft ◄──── Potentiometer      │
+│         │                 └─────┬─────┘           └─────┬──────┘ │
+│         │                       │                       │        │
+│         │                       ▼                       ▼        │
+│         │               Steering Shaft ◄──── Potentiometer       │
 │  ┌──────┴──────┐                                                 │
 │  │  Other ECUs │  (Lighting, Motion, Sensing...)                 │
 │  └─────────────┘                                                 │
@@ -260,45 +259,45 @@ The firmware follows a structured **receive → measure → compute → actuate 
 
 ```
                         ┌─────────────────────┐
-                        │       Power ON       │
+                        │       Power ON      │
                         └──────────┬──────────┘
                                    │
-                        ┌──────────▼──────────┐
+                        ┌──────────▼───────────┐
                         │   HAL Init / MX Init │
                         │   - I2C Slave Config │
                         │   - ADC Init         │
                         │   - PWM Timer Init   │
                         │   - UART Init        │
-                        └──────────┬──────────┘
+                        └──────────┬───────────┘
                                    │
-                        ┌──────────▼──────────┐
+                        ┌──────────▼───────────┐
                         │  Await I2C Command   │
                         │  (HAL Interrupt)     │
-                        └──────────┬──────────┘
+                        └──────────┬───────────┘
                                    │
-                        ┌──────────▼──────────┐
+                        ┌──────────▼───────────┐
                         │  Receive Target      │
                         │  Steering Angle (θt) │
                         │  Validate Range      │
-                        └──────────┬──────────┘
+                        └──────────┬───────────┘
                                    │
         ┌──────────────────────────▼──────────────────────────────┐
         │                   Control Loop                          │
         │                                                         │
-        │  ┌──────────────────────────────────────────────────┐  │
-        │  │  1. ADC Read → Potentiometer Voltage             │  │
-        │  │  2. Map ADC value → Current Angle (θc)           │  │
-        │  │  3. Compute Error: e = θt − θc                   │  │
-        │  │  4. Check: |e| ≤ tolerance? → STOP motor, exit  │  │
-        │  │  5. Select direction: e > 0 → CW, e < 0 → CCW   │  │
-        │  │  6. Set PWM duty cycle ∝ |e|                     │  │
-        │  │  7. Drive motor via H-Bridge                     │  │
-        │  │  8. UART log: θt, θc, e, direction, PWM         │  │
-        │  │  9. Repeat from step 1                           │  │
-        │  └──────────────────────────────────────────────────┘  │
+        │  ┌───────────────────────────────────────────────────┐  │
+        │  │  1. ADC Read → Potentiometer Voltage              │  │
+        │  │  2. Map ADC value → Current Angle (θc)            │  │
+        │  │  3. Compute Error: e = θt − θc                    │  │
+        │  │  4. Check: |e| ≤ tolerance? → STOP motor, exit    │  │
+        │  │  5. Select direction: e > 0 → CW, e < 0 → CCW     │  │
+        │  │  6. Set PWM duty cycle ∝ |e|                      │  │
+        │  │  7. Drive motor via H-Bridge                      │  │
+        │  │  8. UART log: θt, θc, e, direction, PWM           │  │
+        │  │  9. Repeat from step 1                            │  │
+        │  └───────────────────────────────────────────────────┘  │
         └─────────────────────────────────────────────────────────┘
                                    ▲
-              ┌────────────────────┴────────────────────────┐
+              ┌────────────────────┴─────────────────────────┐
               │       I2C HAL Interrupt Callback             │
               │                                              │
               │  1. HAL_I2C_SlaveRxCpltCallback fires        │
@@ -341,7 +340,6 @@ steering_ecu/
 │
 ├── firmware/
 │   ├── main.c                                 # Entry point, main loop & control logic
-│   ├── main.h                                 # Main application header
 │   ├── stm32f4xx_it.c                         # Interrupt handlers
 │   ├── stm32f4xx_hal_msp.c                    # HAL MSP peripheral initialization
 │   └── ...                                    # HAL drivers, ADC, PWM, I2C, UART modules
@@ -402,18 +400,6 @@ steering_ecu/
 - [ ] **Torque Feedback Estimation** — Estimate steering load torque via motor current sensing to detect obstacles or mechanical resistance during autonomous maneuvers
 - [ ] **Watchdog Timer Integration** — Add hardware WDT supervision for autonomous recovery from software hang states — essential in a safety-critical steering application
 - [ ] **AUTOSAR-style Software Layering** — Refactor firmware into MCAL / BSW / Application layers to improve portability, testability, and compliance with automotive software standards
-
----
-
-## 👥 Contributors
-
-| Name | Role |
-|---|---|
-| *(Add contributor name)* | Firmware Engineer |
-| *(Add contributor name)* | Hardware / Circuit Designer |
-| *(Add contributor name)* | Systems Architect |
-
-> *This project was developed as a graduation project. Team members will be listed here upon project submission.*
 
 ---
 
