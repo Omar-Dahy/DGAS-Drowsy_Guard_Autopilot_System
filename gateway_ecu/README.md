@@ -37,19 +37,17 @@
 
 ---
 
-## 🚘 Project Overview
+## 🧠 Project Overview
 
-The **Drowsy Guard Autopilot System (DGAS)** is a distributed automotive safety system engineered to detect and respond to driver drowsiness or sudden loss of consciousness. When the driver becomes unable to control the vehicle, DGAS takes full responsibility for vehicle operation.
+The **Drowsy Guard Autopilot System (DGAS)** is a distributed, real-time automotive safety platform developed as a graduation engineering project. It is designed to continuously monitor the driver for signs of **drowsiness or loss of consciousness**. Upon detection, DGAS autonomously takes control of the vehicle to prevent accidents by:
 
-The system performs the following safety sequence:
+- 🔍 Detecting drowsiness through dedicated sensor ECUs
+- 🚦 Activating warning signals and hazard lighting sequences
+- 🛣️ Safely steering the vehicle toward the **emergency lane**
+- 🛑 Performing a **controlled, gradual stop**
+- 📡 Coordinating all actions across multiple ECUs via a **Master Gateway**
 
-1. Detects driver incapacitation via onboard sensing
-2. Activates hazard warning signals and alerts
-3. Safely maneuvers the vehicle toward the emergency lane
-4. Coordinates all vehicle control modules in real time
-5. Executes a controlled, decelerated stop
-
-DGAS follows a distributed ECU architecture, where each node manages a dedicated vehicle subsystem. The **Gateway ECU** sits at the center of this network, serving as the master controller and communication hub.
+DGAS is built on a **modular multi-ECU architecture**, where each Electronic Control Unit (ECU) is responsible for a specific vehicle subsystem. All ECUs communicate over a shared **I2C bus** managed by the Master/Gateway ECU.
 
 ---
 
