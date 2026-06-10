@@ -105,7 +105,6 @@ The Gateway ECU is responsible for the following operations within the DGAS syst
 | **Communication — Secondary** | USART2 @ 115200 baud (8N1, TX/RX) |
 | **DMA** | DMA1 Stream 6 (I2C1 TX) |
 | **Clock Source** | HSI PLL — 84 MHz System Clock |
-| **PCB** | Custom-designed hardware board |
 | **GPIO** | Status LED (LD2), User Button (B1) |
 
 ---
@@ -167,10 +166,10 @@ The Gateway ECU operates as the **I2C Master** in the DGAS network. All downstre
 ║   │                                   │                      ║
 ║   ▼  Addr 0x08                        │                      ║
 ║   ┌──────────────┐   ▼ Addr 0x62      │ ▼ Addr 0x60          ║
-║   │ STEERING ECU │   ┌─────────────┐  │ ┌──────────────┐    ║
-║   │  Servo Motor │   │ MOTION ECU  │  │ │ LIGHTING ECU │    ║
-║   │  Angle Ctrl  │   │  Speed/Dir  │  │ │ Hazard/Warn  │    ║
-║   └──────────────┘   └─────────────┘  └─┴──────────────┘    ║
+║   │ STEERING ECU │   ┌─────────────┐  │ ┌──────────────┐     ║
+║   │  Servo Motor │   │ MOTION ECU  │  │ │ LIGHTING ECU │     ║
+║   │  Angle Ctrl  │   │  Speed/Dir  │  │ │ Hazard/Warn  │     ║
+║   └──────────────┘   └─────────────┘  └─┴──────────────┘     ║
 ║                                                              ║
 ╚══════════════════════════════════════════════════════════════╝
 ```
@@ -229,7 +228,7 @@ The Gateway ECU firmware implements a sequential, interrupt-safe command process
   └─────────────────┬─────────────────┘
                     │
                     ▼
-  ┌───────────────────────────────────┐  ◄────────────────────────┐
+  ┌───────────────────────────────────┐  ◄─────────────────────────┐
   │    UART Receive (Blocking)        │                            │
   │    Read byte-by-byte until \r\n   │                            │
   └─────────────────┬─────────────────┘                            │
@@ -258,10 +257,10 @@ The Gateway ECU firmware implements a sequential, interrupt-safe command process
   └──────────────┬──────────────┘                                  │
                  │                                                 │
                  ▼                                                 │
-  ┌─────────────────────────────┐                                  │
-  │   Validate & Transmit I2C   │                                  │
-  │   HAL_I2C_Master_Transmit_IT│                                  │
-  └──────────────┬──────────────┘                                  │
+  ┌──────────────────────────────┐                                 │
+  │   Validate & Transmit I2C    │                                 │
+  │   HAL_I2C_Master_Transmit_IT │                                 │
+  └──────────────┬───────────────┘                                 │
                  │                                                 │
                  ▼                                                 │
   ┌─────────────────────────────┐                                  │
@@ -295,11 +294,11 @@ The firmware uses a lightweight integer-based state machine to manage command pr
 ```
          ┌──────────────────────────────────────────────────────┐
          │                                                      │
-  ──────►│           IDLE (State 0)                             │◄──────┐
-         │      Listening on UART                               │       │
-         └──────────┬───────────────────────────────────────────┘       │
+  ──────►│           IDLE (State 0)                             │◄───────┐
+         │      Listening on UART                               │        │
+         └──────────┬───────────────────────────────────────────┘        │
                     │                                                    │
-         cmd = 110/120/130                                              │
+         cmd = 110/120/130                                               │
                     │                                                    │
                     ▼                                                    │
          ┌──────────────────────┐                                        │
@@ -311,11 +310,11 @@ The firmware uses a lightweight integer-based state machine to manage command pr
                     │                                                    │
                     ▼                                                    │
          ┌──────────────────────┐                                        │
-         │  COMMAND RECEPTION   │  ──── invalid value ────► UART error  │
+         │  COMMAND RECEPTION   │  ──── invalid value ────► UART error   │
          │  Validate parameter  │                                        │
          └──────────┬───────────┘                                        │
                     │                                                    │
-            bus free? (ready_to_send == 1)                              │
+            bus free? (ready_to_send == 1)                               │
                     │                                                    │
                     ▼                                                    │
          ┌──────────────────────┐                                        │
@@ -328,7 +327,7 @@ The firmware uses a lightweight integer-based state machine to manage command pr
                     │                                                    │
                     ▼                                                    │
          ┌──────────────────────┐                                        │
-         │  TX COMPLETE         │ ──────────────────────────────────────┘
+         │  TX COMPLETE         │ ───────────────────────────────────────┘
          │  ready_to_send = 1   │
          │  "I2C TX Done" UART  │
          └──────────────────────┘
