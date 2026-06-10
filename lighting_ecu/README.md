@@ -188,7 +188,7 @@ The firmware follows a straightforward **interrupt + polling** execution model d
 
 ```
                         ┌─────────────────────┐
-                        │      Power ON        │
+                        │      Power ON       │
                         └──────────┬──────────┘
                                    │
                         ┌──────────▼───────────┐
@@ -253,9 +253,8 @@ lighting_ecu/
 │   └── PCB_DGAS_LIGHTING_ECU_V1.0.0.png       # PCB layout (Gerber preview)
 │
 ├── firmware/
-│   ├── lighting_ecu_slave.c                    # Main application firmware
+│   ├── application.c                           # Main application firmware
 │   ├── application.h                           # Application header
-│   ├── i2c.h                                   # TWI/I2C peripheral driver
 │   └── ...                                     # Lighting & LDR service modules
 │
 ├── photos/
