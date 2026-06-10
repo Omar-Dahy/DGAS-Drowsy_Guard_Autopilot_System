@@ -34,7 +34,6 @@
 - [PCB & Schematics](#-pcb--schematics)
 - [Technologies Used](#-technologies-used)
 - [Future Improvements](#-future-improvements)
-- [Contributors](#-contributors)
 - [License](#-license)
 
 ---
@@ -118,18 +117,18 @@ The Lighting ECU operates as a **dedicated I2C slave** on the DGAS vehicle bus. 
 ┌─────────────────────────────────────────────────────────────┐
 │                   DGAS System Bus (I2C)                     │
 │                                                             │
-│  ┌──────────────┐     SDA/SCL     ┌────────────────────┐   │
-│  │  Master /    │ ◄────────────── │   Lighting ECU     │   │
-│  │  Gateway ECU │ ──────────────► │   Slave @ 0x60     │   │
-│  └──────────────┘                 └────────────────────┘   │
-│         │                                  │               │
-│         │                    ┌─────────────┼──────────┐    │
-│         │                    ▼             ▼          ▼    │
-│         │             Front Lights   Brake Lights  Hazards │
+│  ┌──────────────┐     SDA/SCL     ┌────────────────────┐    │
+│  │  Master /    │ ◄────────────── │   Lighting ECU     │    │
+│  │  Gateway ECU │ ──────────────► │   Slave @ 0x60     │    │
+│  └──────────────┘                 └────────────────────┘    │
+│         │                                  │                │
+│         │                    ┌─────────────┼──────────┐     │
+│         │                    ▼             ▼          ▼     │
+│         │             Front Lights   Brake Lights  Hazards  │
 │         │                                                   │
-│  ┌──────┴──────┐                                           │
-│  │  Other ECUs │  (Steering, Braking, Sensing...)          │
-│  └─────────────┘                                           │
+│  ┌──────┴──────┐                                            │
+│  │  Other ECUs │  (Steering, Braking, Sensing...)           │
+│  └─────────────┘                                            │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -192,35 +191,35 @@ The firmware follows a straightforward **interrupt + polling** execution model d
                         │      Power ON        │
                         └──────────┬──────────┘
                                    │
-                        ┌──────────▼──────────┐
+                        ┌──────────▼───────────┐
                         │  application_init()  │
                         │  - Lighting Services │
                         │  - Brake Default     │
                         │  - LDR Services      │
                         │  - I2C Slave Init    │
-                        └──────────┬──────────┘
+                        └──────────┬───────────┘
                                    │
-                        ┌──────────▼──────────┐
+                        ┌──────────▼───────────┐
                         │  Blink LED x3        │
                         │  (Startup Confirm)   │
-                        └──────────┬──────────┘
+                        └──────────┬───────────┘
                                    │
-              ┌────────────────────▼─────────────────────────┐
-              │                Main Loop                      │
-              │                                               │
-              │   poll rx_buffer ──► switch(rx_buffer)        │
-              │                           │                   │
-              │           ┌───────────────┼──────────────┐   │
-              │           ▼               ▼              ▼   │
-              │      0x80–0x85       0x86–0x87      0x88–0x8F │
-              │      Front Lights    Brake Lights   Hazard    │
-              │           │               │              │   │
-              │           └───────────────┴──────────────┘   │
-              │                           │                   │
-              │              Execute Function + Clear Buffer  │
-              └───────────────────────────────────────────────┘
+              ┌────────────────────▼────────────────────────────┐
+              │                Main Loop                        │
+              │                                                 │
+              │   poll rx_buffer ──► switch(rx_buffer)          │
+              │                           │                     │
+              │           ┌───────────────┼──────────────┐      │
+              │           ▼               ▼              ▼      │
+              │      0x80–0x85       0x86–0x87      0x88–0x8F   │
+              │      Front Lights    Brake Lights   Hazard      │
+              │           │               │              │      │
+              │           └───────────────┴──────────────┘      │
+              │                           │                     │
+              │              Execute Function + Clear Buffer    │
+              └─────────────────────────────────────────────────┘
                                    ▲
-                    ┌──────────────┴──────────────────┐
+                    ┌──────────────┴───────────────────┐
                     │     TWI Interrupt (ISR)          │
                     │                                  │
                     │  Read TWSR status register       │
@@ -327,18 +326,6 @@ lighting_ecu/
 - [ ] **Unit Testing Framework** — Introduce a hardware abstraction layer (HAL) to enable off-target unit testing with a PC-based test harness
 - [ ] **Watchdog Timer Integration** — Add WDT supervision to recover from software hang states autonomously
 - [ ] **Daytime Running Lights (DRL)** — Extend command set to support DRL sequences required by modern vehicle regulations
-
----
-
-## 👥 Contributors
-
-| Name | Role |
-|---|---|
-| *(Add contributor name)* | Firmware Engineer |
-| *(Add contributor name)* | Hardware / PCB Designer |
-| *(Add contributor name)* | Systems Architect |
-
-> *This project was developed as a graduation project. Team members will be listed here upon project submission.*
 
 ---
 
