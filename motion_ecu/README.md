@@ -149,25 +149,25 @@ The Motion ECU operates as a **dedicated I2C slave** on the DGAS vehicle bus. Al
 ┌──────────────────────────────────────────────────────────────────┐
 │                     DGAS System Bus (I2C)                        │
 │                                                                  │
-│  ┌──────────────┐      SDA/SCL      ┌──────────────────────┐    │
-│  │  Master /    │ ◄──────────────── │    Motion ECU        │    │
-│  │  Gateway ECU │ ─────────────────►│    Slave @ 0x62      │    │
-│  └──────────────┘                   └──────────────────────┘    │
+│  ┌──────────────┐      SDA/SCL      ┌──────────────────────┐     │
+│  │  Master /    │ ◄──────────────── │    Motion ECU        │     │
+│  │  Gateway ECU │ ─────────────────►│    Slave @ 0x62      │     │
+│  └──────────────┘                   └──────────────────────┘     │
 │         │                                      │                 │
-│         │                       ┌──────────────┴──────────┐     │
-│         │                       ▼                         ▼     │
-│         │                 ┌───────────┐           ┌───────────┐ │
-│         │                 │  Motor 1  │           │  Motor 2  │ │
-│         │                 │  (CW/CCW) │           │  (CW/CCW) │ │
-│         │                 └───────────┘           └───────────┘ │
-│         │                       │                         │     │
-│         │                       └────────────┬────────────┘     │
-│         │                                    ▼                  │
-│         │                          Cytron MDD10A                │
-│         │                          Dual Motor Driver            │
-│  ┌──────┴──────┐                                                │
-│  │  Other ECUs │  (Lighting, Steering, Sensing...)              │
-│  └─────────────┘                                                │
+│         │                       ┌──────────────┴──────────┐      │
+│         │                       ▼                         ▼      │
+│         │                 ┌───────────┐           ┌───────────┐  │
+│         │                 │  Motor 1  │           │  Motor 2  │  │
+│         │                 │  (CW/CCW) │           │  (CW/CCW) │  │
+│         │                 └───────────┘           └───────────┘  │
+│         │                       │                         │      │
+│         │                       └────────────┬────────────┘      │
+│         │                                    ▼                   │
+│         │                          Cytron MDD10A                 │
+│         │                          Dual Motor Driver             │
+│  ┌──────┴──────┐                                                 │
+│  │  Other ECUs │  (Lighting, Steering, Sensing...)               │
+│  └─────────────┘                                                 │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
@@ -223,45 +223,45 @@ The firmware follows an **interrupt + polling** execution model — a proven pat
 
 ```
                         ┌─────────────────────┐
-                        │       Power ON       │
+                        │       Power ON      │
                         └──────────┬──────────┘
                                    │
-                        ┌──────────▼──────────┐
+                        ┌──────────▼───────────┐
                         │  application_init()  │
                         │  - Motor Services    │
                         │  - I2C Slave Init    │
                         │    (Address: 0x62)   │
                         │  - Interrupt Enable  │
-                        └──────────┬──────────┘
+                        └──────────┬───────────┘
                                    │
-                        ┌──────────▼──────────┐
+                        ┌──────────▼───────────┐
                         │  Blink Debug LED     │
                         │  (Startup Confirm)   │
-                        └──────────┬──────────┘
+                        └──────────┬───────────┘
                                    │
         ┌──────────────────────────▼────────────────────────────────┐
         │                       Main Loop                           │
         │                                                           │
         │   poll rx_buffer  ──►  switch(rx_buffer)                  │
         │                               │                           │
-        │        ┌──────────────────────┼─────────────────┐        │
+        │        ┌──────────────────────┼─────────────────┐         │
         │        ▼                      ▼                  ▼        │
-        │   0x81–0x84             0x85–0x87           0x88–0x8A    │
+        │   0x81–0x84             0x85–0x87           0x88–0x8A     │
         │   Group / Speed         Motor 1 Cmds        Motor 2 Cmds  │
         │        │                      │                  │        │
-        │        └──────────────────────┴─────────────────┘        │
+        │        └──────────────────────┴─────────────────┘         │
         │                               │                           │
         │              Execute Motor Function + Clear rx_buffer     │
         └───────────────────────────────────────────────────────────┘
                                    ▲
-              ┌────────────────────┴────────────────────────┐
+              ┌────────────────────┴─────────────────────────┐
               │          TWI Interrupt Handler (ISR)         │
               │                                              │
               │  1. Read TWSR — validate I2C status code     │
-              │  2. Check TWDR for valid data condition       │
+              │  2. Check TWDR for valid data condition      │
               │  3. Store received byte → rx_buffer          │
               │  4. Blink debug LED x1 (reception confirm)   │
-              │  5. Return — main loop dispatches action      │
+              │  5. Return — main loop dispatches action     │
               └──────────────────────────────────────────────┘
 ```
 
@@ -300,8 +300,6 @@ motion_ecu/
 │
 ├── firmware/
 │   ├── main.c                                   # Entry point, main loop & I2C ISR
-│   ├── application.c                            # Application logic & command dispatch
-│   ├── application.h                            # Application header & declarations
 │   └── ...                                      # Motor driver, I2C, and service modules
 │
 ├── photos/
