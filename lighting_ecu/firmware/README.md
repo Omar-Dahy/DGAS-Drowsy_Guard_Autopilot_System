@@ -120,10 +120,11 @@ DGAS spans two physical environments connected over a wireless link and integrat
 ║  │  │   STM32 — I2C Master     │   │                                 ║
 ║  │  └──┬──────────┬────────────┘   │                                 ║
 ║  │     │  I2C     │  Bus           │                                 ║
-║  │  ┌──┘  ┌───────┘  ┌────────┐   │                                 ║
-║  │  ▼     ▼          ▼        │   │                                 ║
-║  │ [Steering] [Motion] [Lighting]  │                                 ║
-║  │   ECU       ECU       ECU   │   │                                 ║
+║  │  ┌──┘────────┬┘───────┬────┐    │                                 ║
+║  │  │           │             │    │                                 ║
+║  │  ▼           ▼             ▼    │                                 ║
+║  │ [Steering] [Motion]  [Lighting] │                                 ║
+║  │   ECU       ECU        ECU      │                                 ║
 ║  └─────────────────────────────────┘                                 ║
 ║                                                                      ║
 ╚══════════════════════════════════════════════════════════════════════╝
@@ -131,14 +132,14 @@ DGAS spans two physical environments connected over a wireless link and integrat
 
 | Domain | Technology | Repository |
 |---|---|---|
-| Driver Monitoring AI | Python, Camera, CV Model | `dgas-driver-monitoring` |
-| Lane Detection AI | Python, Astra Pro Camera, CV Model | `dgas-lane-detection` |
-| Python Dashboard | Python Desktop App, PS4 Controller | `dgas-cabin-simulator` |
-| Gateway ECU | STM32, UART, I2C Master | `dgas-gateway-ecu` |
-| Steering ECU | STM32, Closed-Loop PWM, ADC | `dgas-steering-ecu` |
-| Motion ECU | AVR, Cytron MDD10A, I2C Slave | `dgas-motion-ecu` |
-| Lighting ECU | AVR, I2C Slave, Hazard/Brake Control | `dgas-lighting-ecu` |
-| Wireless Bridge | Arduino UNO, NRF24L01 | `dgas-wireless` |
+| Driver Monitoring AI | Python, Camera, CV Model | `driver-monitoring` |
+| Lane Detection AI | Python, Astra Pro Camera, CV Model | `lane-detection` |
+| Python Dashboard | Python Desktop App, PS4 Controller | `cabin-simulator` |
+| Gateway ECU | STM32, UART, I2C Master | `dgateway-ecu` |
+| Steering ECU | STM32, Closed-Loop PWM, ADC | `steering-ecu` |
+| Motion ECU | AVR, Cytron MDD10A, I2C Slave | `motion-ecu` |
+| Lighting ECU | AVR, I2C Slave, Hazard/Brake Control | `lighting-ecu` |
+| Wireless Bridge | Arduino UNO, NRF24L01 | `wireless` |
 | **System Integration** | **Architecture & Documentation** | **← This Repository** |
 
 ---
@@ -150,38 +151,38 @@ DGAS is organized into two physical stations, linked by a long-range wireless co
 ### High-Level Architecture
 
 ```
-┌────────────────────────────────────────────────────────────────────┐
-│                        DGAS Architecture                           │
-├───────────────────────────┬────────────────────────────────────────┤
-│  DRIVER CABIN             │  VEHICLE SIDE                          │
-│                           │                                        │
-│  ┌─────────────┐          │          ┌─────────────────────────┐   │
-│  │  Driver     │          │          │  Vehicle Computer       │   │
-│  │  Camera     │──────┐   │          │                         │   │
-│  └─────────────┘      │   │          │  ┌───────────────────┐  │   │
-│                        │   │          │  │  Lane Detection   │  │   │
-│  ┌─────────────┐       ▼   │          │  │  AI               │  │   │
-│  │  PS4        │  ┌───────┐│          │  └───────────────────┘  │   │
-│  │  Controller │─►│Python ││          │  ┌───────────────────┐  │   │
-│  └─────────────┘  │ App   ││  ~~~~~~  │  │  Decision Engine  │  │   │
-│                   └───┬───┘│  NRF24  │  └─────────┬─────────┘  │   │
-│                       │    │          │            │ UART        │   │
-│  ┌─────────────┐      │    │          └────────────┼────────────┘   │
-│  │  Arduino +  │◄─────┘    │                       │                │
-│  │  NRF24L01   │           │          ┌────────────▼────────────┐   │
-│  └─────────────┘           │          │     Gateway ECU          │   │
-│                             │          │  STM32 — I2C Master      │   │
-│                             │          └──────┬──────┬────────────┘   │
-│                             │              I2C│      │Bus             │
-│                             │       ┌────────┘      └──────────┐     │
+┌──────────────────────────────────────────────────────────────────────┐
+│                        DGAS Architecture                             │
+├─────────────────────────────┬────────────────────────────────────────┤
+│  DRIVER CABIN               │  VEHICLE SIDE                          │
+│                             │                                        │
+│  ┌─────────────┐            │          ┌─────────────────────────┐   │
+│  │  Driver     │            │          │  Vehicle Computer       │   │
+│  │  Camera     │───────┐    │          │                         │   │
+│  └─────────────┘       │    │          │  ┌───────────────────┐  │   │
+│                        │    │          │  │  Lane Detection   │  │   │
+│  ┌─────────────┐       ▼    │          │  │  AI               │  │   │
+│  │  PS4        │  ┌───────┐ │          │  └───────────────────┘  │   │
+│  │  Controller │─►│Python │ │          │  ┌───────────────────┐  │   │
+│  └─────────────┘  │ App   │ │  ~~~~~~  │  │  Decision Engine  │  │   │
+│                   └───┬───┘ │  NRF24   │  └─────────┬─────────┘  │   │
+│                       │     │          │            │ UART       │   │
+│  ┌─────────────┐      │     │          └────────────┼────────────┘   │
+│  │  Arduino +  │◄─────┘     │                       │                │
+│  │  NRF24L01   │            │          ┌────────────▼────────────┐   │
+│  └─────────────┘            │          │     Gateway ECU         │   │
+│                             │          │  STM32 — I2C Master     │   │
+│                             │          └──────┬──────┬───────────┘   │
+│                             │              I2C│      │Bus            │
+│                             │       ┌─────────┘      └─────────┐     │
 │                             │       ▼                          ▼     │
-│                             │  ┌─────────┐  ┌─────────┐  ┌─────────┐│
-│                             │  │Steering │  │ Motion  │  │Lighting ││
-│                             │  │  ECU    │  │  ECU    │  │  ECU    ││
-│                             │  │STM32    │  │  AVR    │  │  AVR    ││
-│                             │  │0x08     │  │  0x62   │  │  0x60   ││
-│                             │  └─────────┘  └─────────┘  └─────────┘│
-└─────────────────────────────┴──────────────────────────────────────┘
+│                             │  ┌─────────┐  ┌─────────┐  ┌─────────┐ │
+│                             │  │Steering │  │ Motion  │  │Lighting │ │
+│                             │  │  ECU    │  │  ECU    │  │  ECU    │ │
+│                             │  │STM32    │  │  AVR    │  │  AVR    │ │
+│                             │  │0x08     │  │  0x62   │  │  0x60   │ │
+│                             │  └─────────┘  └─────────┘  └─────────┘ │
+└─────────────────────────────┴────────────────────────────────────────┘
 ```
 
 ### Operational Modes
@@ -202,13 +203,13 @@ The **Driver Cabin Simulation Station** is a Python desktop application that sim
 ### Application Layout
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    DGAS — Cabin Simulator                           │
-├───────────────────────────────┬─────────────────────────────────────┤
-│         LEFT PANEL            │           RIGHT PANEL               │
-│                               │                                     │
+┌────────────────────────────────────────────────────────────────────┐
+│                    DGAS — Cabin Simulator                          │
+├───────────────────────────────┬────────────────────────────────────┤
+│         LEFT PANEL            │           RIGHT PANEL              │
+│                               │                                    │
 │  ┌───────────────────────┐    │    ┌───────────────────────────┐   │
-│  │ PS4 Controller        │    │    │ JSON Command Payload       │   │
+│  │ PS4 Controller        │    │    │ JSON Command Payload      │   │
 │  │ Button Visualization  │    │    │                           │   │
 │  │                       │    │    │  {                        │   │
 │  │  [ △ ] [ ○ ] [ □ ]   │    │    │    "driver_state": ...,   │   │
@@ -217,14 +218,14 @@ The **Driver Cabin Simulation Station** is a Python desktop application that sim
 │  │  D-PAD    STICKS      │    │    │    "connection": ...      │   │
 │  └───────────────────────┘    │    │  }                        │   │
 │                               │    └───────────────────────────┘   │
-│  ┌───────────────────────┐    │                                     │
+│  ┌───────────────────────┐    │                                    │
 │  │ Control Bars          │    │    ┌───────────────────────────┐   │
 │  │                       │    │    │  [Connect]  [Disconnect]  │   │
 │  │  Throttle  ████░░░░   │    │    │  [Activate Camera]        │   │
 │  │  Steering  ░░░████░   │    │    └───────────────────────────┘   │
-│  │  Brake     ░░░░░░██   │    │                                     │
+│  │  Brake     ░░░░░░██   │    │                                    │
 │  └───────────────────────┘    │    ┌───────────────────────────┐   │
-│                               │    │  Live Camera Feed          │   │
+│                               │    │  Live Camera Feed         │   │
 │  ┌───────────────────────┐    │    │                           │   │
 │  │ Vehicle Control       │    │    │  ┌─────────────────────┐  │   │
 │  │ Indicators            │    │    │  │                     │  │   │
@@ -233,7 +234,7 @@ The **Driver Cabin Simulation Station** is a Python desktop application that sim
 │  │  State:  ALERT        │    │    │  │  [DROWSY DETECTED]  │  │   │
 │  └───────────────────────┘    │    │  └─────────────────────┘  │   │
 │                               │    └───────────────────────────┘   │
-└───────────────────────────────┴─────────────────────────────────────┘
+└───────────────────────────────┴────────────────────────────────────┘
 ```
 
 ### Key Features
@@ -258,11 +259,11 @@ The **Vehicle Control Station** is the vehicle-side computing environment. It re
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│              Vehicle Control Station                     │
+│              Vehicle Control Station                    │
 │                                                         │
-│  ┌───────────────┐     JSON      ┌──────────────────┐  │
-│  │  Wireless     │─────────────► │  Command Parser  │  │
-│  │  Receiver     │               └────────┬─────────┘  │
+│  ┌───────────────┐     JSON      ┌──────────────────┐   │
+│  │  Wireless     │─────────────► │  Command Parser  │   │
+│  │  Receiver     │               └────────┬─────────┘   │
 │  │  (NRF24L01)   │                        │             │
 │  └───────────────┘                        ▼             │
 │                               ┌───────────────────────┐ │
@@ -277,7 +278,7 @@ The **Vehicle Control Station** is the vehicle-side computing environment. It re
 │  └───────────────┘                       │              │
 │                                          │ UART         │
 │                               ┌──────────▼────────────┐ │
-│                               │    Gateway ECU         │ │
+│                               │    Gateway ECU        │ │
 │                               └───────────────────────┘ │
 └─────────────────────────────────────────────────────────┘
 ```
@@ -303,7 +304,7 @@ DGAS uses a dual-Arduino, dual-NRF24L01 wireless bridge to transmit driver telem
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                  Wireless Communication Bridge                       │
+│                  Wireless Communication Bridge                      │
 │                                                                     │
 │  ┌─────────────────┐                       ┌─────────────────────┐  │
 │  │  TRANSMIT SIDE  │                       │   RECEIVE SIDE      │  │
@@ -316,12 +317,12 @@ DGAS uses a dual-Arduino, dual-NRF24L01 wireless bridge to transmit driver telem
 │  │       │         │                       │       ▲             │  │
 │  │       │ SPI     │                       │       │ SPI         │  │
 │  │       ▼         │                       │       │             │  │
-│  │  NRF24L01       │  ~~~ RF Link ~~~      │  NRF24L01           │  │
-│  │  (Transmitter)  │ ──────────────────► │  (Receiver)         │  │
+│  │  NRF24L01       │    ~~~ RF Link ~~~    │  NRF24L01           │  │
+│  │  (Transmitter)  │ ────────────────────► │  (Receiver)         │  │
 │  └─────────────────┘                       └─────────────────────┘  │
 │                                                                     │
 │  Link Range: Up to approximately 1 km under suitable conditions     │
-│  Protocol:   NRF24L01 proprietary RF — 2.4 GHz band                │
+│  Protocol:   NRF24L01 proprietary RF — 2.4 GHz band                 │
 │  Direction:  Unidirectional (Cabin → Vehicle)                       │
 └─────────────────────────────────────────────────────────────────────┘
 ```
@@ -489,7 +490,7 @@ Astra Pro Camera
                 │
                 ▼
      ┌──────────────────────┐
-     │  Path Estimator      │ ── Target trajectory computation
+     │    Path Estimator    │ ── Target trajectory computation
      └──────────┬───────────┘
                 │
                 ▼
@@ -577,35 +578,35 @@ All vehicle actuator ECUs communicate over a shared **I2C bus** with the **Gatew
 
 ```
 ╔══════════════════════════════════════════════════════════════════════╗
-║                   DGAS Distributed ECU Network                      ║
+║                   DGAS Distributed ECU Network                       ║
 ╠══════════════════════════════════════════════════════════════════════╣
 ║                                                                      ║
 ║   [ Vehicle Computer ]                                               ║
 ║        │                                                             ║
 ║     UART (115200 baud)                                               ║
 ║        │                                                             ║
-║   ┌────▼───────────────────────────────────────────┐                ║
-║   │               GATEWAY ECU                      │                ║
-║   │   STM32F4 — I2C Master @ 100 kHz               │                ║
-║   │   DMA-Assisted Non-Blocking Transmissions       │                ║
-║   │   Bus Arbitration Guard (ready_to_send flag)    │                ║
-║   └──────────────┬────────────────┬────────────────┘                ║
-║                  │   I2C Bus      │   (SDA / SCL)                   ║
-║       ┌──────────┘   ┌────────────┘   ┌───────────┐                ║
-║       ▼              ▼                ▼           │                 ║
-║  ┌──────────┐  ┌──────────┐   ┌─────────────┐    │                 ║
-║  │STEERING  │  │ MOTION   │   │  LIGHTING   │    │                 ║
-║  │  ECU     │  │  ECU     │   │    ECU      │    │                 ║
-║  │          │  │          │   │             │    │                 ║
-║  │ STM32    │  │  AVR     │   │   AVR       │    │                 ║
-║  │ Addr:    │  │ Addr:    │   │  Addr:      │    │                 ║
-║  │ 0x08     │  │ 0x62     │   │  0x60       │    │                 ║
-║  │          │  │          │   │             │    │                 ║
-║  │ Servo    │  │ Cytron   │   │ Front/Brake │    │                 ║
-║  │ Motor    │  │ MDD10A   │   │ Hazard LEDs │    │                 ║
-║  │ Closed-  │  │ Dual DC  │   │ LDR Sensor  │    │                 ║
-║  │ Loop ADC │  │ Motor    │   │             │    │                 ║
-║  └──────────┘  └──────────┘   └─────────────┘    │                 ║
+║   ┌────▼───────────────────────────────────────────┐                 ║
+║   │               GATEWAY ECU                      │                 ║
+║   │   STM32F4 — I2C Master @ 100 kHz               │                 ║
+║   │   DMA-Assisted Non-Blocking Transmissions      │                 ║
+║   │   Bus Arbitration Guard (ready_to_send flag)   │                 ║
+║   └──────────────┬────────────────┬────────────────┘                 ║
+║                  │   I2C Bus      │   (SDA / SCL)                    ║
+║       ┌──────────┘───┌────────────┘───┌                              ║
+║       ▼              ▼                ▼                              ║
+║  ┌──────────┐  ┌──────────┐   ┌─────────────┐                        ║
+║  │STEERING  │  │ MOTION   │   │  LIGHTING   │                        ║
+║  │  ECU     │  │  ECU     │   │    ECU      │                        ║
+║  │          │  │          │   │             │                        ║
+║  │ STM32    │  │  AVR     │   │   AVR       │                        ║
+║  │ Addr:    │  │ Addr:    │   │  Addr:      │                        ║
+║  │ 0x08     │  │ 0x62     │   │  0x60       │                        ║
+║  │          │  │          │   │             │                        ║
+║  │ Servo    │  │ Cytron   │   │ Front/Brake │                        ║
+║  │ Motor    │  │ MDD10A   │   │ Hazard LEDs │                        ║
+║  │ Closed-  │  │ Dual DC  │   │ LDR Sensor  │                        ║
+║  │ Loop ADC │  │ Motor    │   │             │                        ║
+║  └──────────┘  └──────────┘   └─────────────┘                        ║
 ╚══════════════════════════════════════════════════════════════════════╝
 ```
 
