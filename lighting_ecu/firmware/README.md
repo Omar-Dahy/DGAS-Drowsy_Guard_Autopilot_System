@@ -135,7 +135,7 @@ DGAS spans two physical environments connected over a wireless link and integrat
 | Driver Monitoring AI | Python, Camera, CV Model | `driver-monitoring` |
 | Lane Detection AI | Python, Astra Pro Camera, CV Model | `lane-detection` |
 | Python Dashboard | Python Desktop App, PS4 Controller | `cabin-simulator` |
-| Gateway ECU | STM32, UART, I2C Master | `dgateway-ecu` |
+| Gateway ECU | STM32, UART, I2C Master | `gateway-ecu` |
 | Steering ECU | STM32, Closed-Loop PWM, ADC | `steering-ecu` |
 | Motion ECU | AVR, Cytron MDD10A, I2C Slave | `motion-ecu` |
 | Lighting ECU | AVR, I2C Slave, Hazard/Brake Control | `lighting-ecu` |
