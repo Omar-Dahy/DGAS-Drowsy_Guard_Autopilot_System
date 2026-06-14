@@ -2,7 +2,7 @@
 
 A simple two-board wireless system: a transmitter reads button presses and sends them over an nRF24L01 radio module, and a receiver lights up LEDs based on the received value.
 
-![Wireless Connection](wireless/wireless_connection.png)
+![Wireless Connection](wireless_connection.png)
 
 ---
 
